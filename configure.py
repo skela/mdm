@@ -18,7 +18,8 @@ packages = [
 	"gimp",
 	"gemini-cli",
 	"cura-bin",
-	# "visual-studio-code-bin",
+	"blender",
+	"visual-studio-code-bin",
 ]
 
 for package in packages:
