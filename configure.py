@@ -6,7 +6,7 @@ def execute(cmd: str):
 
 
 def install(name: str):
-	execute(f"yay -S --no-confirm {name}")
+	execute(f"yay --no-confirm -S {name}")
 
 
 execute("yay")
