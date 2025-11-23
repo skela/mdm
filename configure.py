@@ -6,7 +6,7 @@ def execute(cmd: str):
 
 
 def install(name: str):
-	execute(f"yay --noconfirm -S {name}")
+	execute(f"yay --batchinstall --needed -S {name}")
 
 
 execute("yay")
