@@ -37,10 +37,12 @@ def install_packages():
 
 	install_flatpaks()
 	install_roblox_studio_launcher()
+	install_roblox_launcher()
 
 
 def install_flatpaks():
 	flat_paks = [
+		"org.vinegarhq.Sober",
 		"org.vinegarhq.Vinegar",  # roblox-studio - https://github.com/Nightro-Fx/Flatpak-Vinegar-Guide
 	]
 
@@ -74,6 +76,31 @@ X-Flatpak=org.vinegarhq.Vinegar
 	with open(desktop_path, "w", encoding="utf-8") as desktop_file:
 		desktop_file.write(desktop_entry)
 
+def install_roblox_launcher():
+	applications_dir = os.path.expanduser("~/.local/share/applications")
+	# os.makedirs(applications_dir, exist_ok=True)
+	# icons_dir = os.path.expanduser("~/.icons")
+	# os.makedirs(icons_dir, exist_ok=True)
+	# repo_root = os.path.dirname(os.path.abspath(__file__))
+	# icon_src = os.path.join(repo_root, "res", "roblox.svg")
+	# icon_name = "roblox-vinegar"
+	# icon_dst = os.path.join(icons_dir, f"{icon_name}.svg")
+	# shutil.copy(icon_src, icon_dst)
+	icon_name = "roblox-sober"
+	desktop_path = os.path.join(applications_dir, f"{icon_name}.desktop")
+	desktop_entry = """[Desktop Entry]
+Name=Roblox Studio
+Comment=Launch Roblox via Sober Flatpak
+Exec=flatpak run org.vinegarhq.Sober
+Terminal=false
+Type=Application
+Icon=roblox-sober
+Categories=Game;Education;
+StartupNotify=true
+X-Flatpak=org.vinegarhq.Sober
+"""
+	with open(desktop_path, "w", encoding="utf-8") as desktop_file:
+		desktop_file.write(desktop_entry)
 
 DESKTOP_DIRS = [
 	"/usr/share/applications",
@@ -98,7 +125,8 @@ def configure_gnome_favorites():
 	ghostty = find_desktop_entry(["com.mitchellh.ghostty.desktop", "ghostty.desktop"])
 	vscode = find_desktop_entry(["visual-studio-code.desktop", "code.desktop"])
 	blender = find_desktop_entry(["blender.desktop"])
-	roblox = find_desktop_entry(["roblox-vinegar.desktop"])
+	roblox_studio = find_desktop_entry(["roblox-vinegar.desktop"])
+	roblox = find_desktop_entry(["roblox-sober.desktop"])
 	nautilus = "org.gnome.Nautilus.desktop"
 	chrome = "google-chrome.desktop"
 	current = [app for app in current if app not in {
@@ -112,6 +140,7 @@ def configure_gnome_favorites():
 		ghostty,
 		vscode,
 		blender,
+		roblox_studio,
 		roblox,
 	]
 	excluded = set(ordered)
