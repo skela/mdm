@@ -30,7 +30,6 @@ packages = [
 for package in packages:
 	install(package)
 
-
 DESKTOP_DIRS = [
 	"/usr/share/applications",
 	os.path.expanduser("~/.local/share/applications"),
@@ -51,29 +50,22 @@ def configure_gnome_favorites():
 		text=True,
 	).strip()
 	current = ast.literal_eval(raw)
-	ghostty_desktop = find_desktop_entry(
-		["com.mitchellh.ghostty.desktop", "ghostty.desktop"]
-	)
-	vscode_desktop = find_desktop_entry(
-		["visual-studio-code.desktop", "code.desktop"]
-	)
-	blender_desktop = find_desktop_entry(["blender.desktop"])
-	current = [
-		app
-		for app in current
-		if app
-		not in {
-			"firefox.desktop",
-			"firefox-developer-edition.desktop",
-			"org.gnome.Console.desktop",
-		}
-	]
+	ghostty = find_desktop_entry(["com.mitchellh.ghostty.desktop", "ghostty.desktop"])
+	vscode = find_desktop_entry(["visual-studio-code.desktop", "code.desktop"])
+	blender = find_desktop_entry(["blender.desktop"])
+	nautilus = "org.gnome.Nautilus.desktop"
+	chrome = "google-chrome.desktop"
+	current = [app for app in current if app not in {
+		"firefox.desktop",
+		"firefox-developer-edition.desktop",
+		"org.gnome.Console.desktop",
+	}]
 	ordered = [
-		"org.gnome.Nautilus.desktop",
-		"google-chrome.desktop",
-		ghostty_desktop,
-		vscode_desktop,
-		blender_desktop,
+		nautilus,
+		chrome,
+		ghostty,
+		vscode,
+		blender,
 	]
 	excluded = set(ordered)
 	current = [app for app in current if app not in excluded]
