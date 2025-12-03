@@ -35,15 +35,24 @@ def configure_gnome_favorites():
 		["gsettings", "get", "org.gnome.shell", "favorite-apps"],
 		text=True,
 	).strip()
-	favorites = ast.literal_eval(raw)
-	favorites = [app for app in favorites if app not in {
-		"firefox.desktop",
-		"org.gnome.Console.desktop",
-	}]
-	if "google-chrome.desktop" not in favorites:
-		favorites.append("google-chrome.desktop")
-	if "ghostty.desktop" not in favorites:
-		favorites.append("ghostty.desktop")
+	current = ast.literal_eval(raw)
+	current = [
+		app
+		for app in current
+		if app not in {
+			"firefox.desktop",
+			"org.gnome.Console.desktop",
+			"google-chrome.desktop",
+			"ghostty.desktop",
+			"org.gnome.Nautilus.desktop",
+		}
+	]
+	ordered = [
+		"google-chrome.desktop",
+		"ghostty.desktop",
+		"org.gnome.Nautilus.desktop",
+	]
+	favorites = ordered + current
 	execute(f"gsettings set org.gnome.shell favorite-apps \"{favorites}\"")
 
 
