@@ -6,13 +6,14 @@ def execute(cmd: str):
 
 
 def install(name: str):
-	execute(f"yay --batchinstall --needed -S {name}")
+	execute(f"yay --noconfirm --batchinstall --needed -S {name}")
 
 
-execute("yay")
+execute("yay --noconfirm")
 
 packages = [
 	"ghostty",
+	"neovim",
 	"krita",
 	"inkscape",
 	"gimp",
@@ -20,6 +21,7 @@ packages = [
 	"cura-bin",
 	"blender",
 	"visual-studio-code-bin",
+	"google-chrome",
 ]
 
 for package in packages:
