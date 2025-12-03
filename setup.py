@@ -36,20 +36,16 @@ def configure_gnome_favorites():
 		text=True,
 	).strip()
 	current = ast.literal_eval(raw)
-	current = [
-		app
-		for app in current
-		if app not in {
-			"firefox.desktop",
-			"org.gnome.Console.desktop",
-			"google-chrome.desktop",
-			"ghostty.desktop",
-			"org.gnome.Nautilus.desktop",
-		}
-	]
+	current = [app for app in current if app not in {
+		"firefox.desktop",
+		"org.gnome.Console.desktop",
+		"google-chrome.desktop",
+		"com.mitchellh.ghostty.desktop",
+		"org.gnome.Nautilus.desktop",
+	}]
 	ordered = [
 		"google-chrome.desktop",
-		"ghostty.desktop",
+		"com.mitchellh.ghostty.desktop",
 		"org.gnome.Nautilus.desktop",
 	]
 	favorites = ordered + current
