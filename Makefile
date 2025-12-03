@@ -1,10 +1,10 @@
-default: update configure
+default: update setup
 
 .PHONY: update
 update:
 	@git pull
 
-.PHONY: configure
-configure:
-	@python configure.py
+.PHONY: setup
+setup:
+	@python setup.py
 
