@@ -36,9 +36,15 @@ def configure_gnome_favorites():
 		text=True,
 	).strip()
 	favorites = ast.literal_eval(raw)
-	favorites = [app for app in favorites if app != "firefox.desktop"]
+	favorites = [
+		app
+		for app in favorites
+		if app not in {"firefox.desktop", "kdx.desktop"}
+	]
 	if "google-chrome.desktop" not in favorites:
 		favorites.append("google-chrome.desktop")
+	if "ghostty.desktop" not in favorites:
+		favorites.append("ghostty.desktop")
 	execute(f"gsettings set org.gnome.shell favorite-apps \"{favorites}\"")
 
 
