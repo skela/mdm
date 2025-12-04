@@ -11,24 +11,37 @@ def install(name: str):
 	execute(f"yay --noconfirm --batchinstall --needed -S {name}")
 
 
-execute("yay --noconfirm")
+def update_all():
+	execute("yay --noconfirm")
 
-packages = [
-	"ghostty",
-	"neovim",
-	"fish",
-	"krita",
-	"inkscape",
-	"gimp",
-	"gemini-cli",
-	"cura-bin",
-	"blender",
-	"visual-studio-code-bin",
-	"google-chrome",
-]
 
-for package in packages:
-	install(package)
+def install_packages():
+	packages = [
+		"ghostty",
+		"neovim",
+		"fish",
+		"krita",
+		"inkscape",
+		"gimp",
+		"gemini-cli",
+		"cura-bin",
+		"blender",
+		"visual-studio-code-bin",
+		"google-chrome",
+		"flatpak",
+	]
+
+	for package in packages:
+		install(package)
+
+	flat_paks = [
+		"org.vinegarhq.Vinegar",
+	]
+
+	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
+	for package in flat_paks:
+		execute(f"flatpak install flathub {package} -y")
+
 
 DESKTOP_DIRS = [
 	"/usr/share/applications",
@@ -79,5 +92,7 @@ def configure_background():
 	execute(f"gsettings set org.gnome.desktop.background picture-uri-dark {bg} ")
 
 
+update_all()
+install_packages()
 configure_gnome_favorites()
 configure_background()
