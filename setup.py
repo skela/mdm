@@ -35,7 +35,7 @@ def install_packages():
 		install(package)
 
 	flat_paks = [
-		"org.vinegarhq.Vinegar",  # roblox-studio
+		"org.vinegarhq.Vinegar",  # roblox-studio - https://github.com/Nightro-Fx/Flatpak-Vinegar-Guide
 	]
 
 	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
