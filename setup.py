@@ -34,6 +34,10 @@ def install_packages():
 	for package in packages:
 		install(package)
 
+	install_flatpaks()
+
+
+def install_flatpaks():
 	flat_paks = [
 		"org.vinegarhq.Vinegar",  # roblox-studio - https://github.com/Nightro-Fx/Flatpak-Vinegar-Guide
 	]
