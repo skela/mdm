@@ -50,13 +50,13 @@ def install_flatpaks():
 
 
 def install_vinegar_launcher():
-	applications_dir = os.path.expanduser("~/.icons")
+	applications_dir = os.path.expanduser("~/.local/share/applications")
 	os.makedirs(applications_dir, exist_ok=True)
-	icons_dir = os.path.expanduser("~/.local/share/icons/hicolor/scalable/apps")
+	icons_dir = os.path.expanduser("~/.icons")
 	os.makedirs(icons_dir, exist_ok=True)
 	repo_root = os.path.dirname(os.path.abspath(__file__))
 	icon_src = os.path.join(repo_root, "res", "roblox.svg")
-	icon_name = "roblox-studio"
+	icon_name = "roblox-vinegar"
 	icon_dst = os.path.join(icons_dir, f"{icon_name}.svg")
 	shutil.copy(icon_src, icon_dst)
 	desktop_path = os.path.join(applications_dir, f"{icon_name}.desktop")
