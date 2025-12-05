@@ -1,9 +1,6 @@
-<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-	<defs>
-		<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-			<feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.25" />
-		</filter>
-	</defs>
-	<rect width="180" height="180" x="38" y="38" rx="28" transform="rotate(15 128 128)" fill="#E1221A" filter="url(#shadow)" />
-	<rect width="82" height="82" x="87" y="87" rx="12" transform="rotate(15 128 128)" fill="#FFFFFF" />
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="477" height="477" viewBox="0 0 134.86717 134.86723">
+<g transform="translate(-0.31047259,-0.31047345)">
+ <path transform="matrix(4.2145936,0,0,4.2145936,0.2065483,-3.8001967)" d="M 6.78817,0.975342 3.21606,14.3004 l 9.09084,2.4333 1.1355,-4.2343 16.1457,4.327 2.4366,-9.08756 z M 18.6069,21.448 2.46124,17.1211 0.0246582,26.2119 25.2611,32.9754 28.8332,19.6504 19.7424,17.2138 Z" style="fill:#009FFF;fill-opacity:1" />
+</g>
 </svg>
