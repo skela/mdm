@@ -36,7 +36,7 @@ def install_packages():
 		install(package)
 
 	install_flatpaks()
-	install_vinegar_launcher()
+	install_roblox_studio_launcher()
 
 
 def install_flatpaks():
@@ -49,7 +49,7 @@ def install_flatpaks():
 		execute(f"flatpak install flathub {package} -y")
 
 
-def install_vinegar_launcher():
+def install_roblox_studio_launcher():
 	applications_dir = os.path.expanduser("~/.local/share/applications")
 	os.makedirs(applications_dir, exist_ok=True)
 	icons_dir = os.path.expanduser("~/.icons")
