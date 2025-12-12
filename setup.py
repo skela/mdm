@@ -144,9 +144,9 @@ teknolab() {{
 	(
 		cd "{repo_root}" || return 1
 		case "$1" in
-			\"\" ) make help ;;
-			install ) make install ;;
-			update ) make update ;;
+			"" ) make help ;;
+			install|-i ) make install ;;
+			update|-u ) make update ;;
 			* ) make help ;;
 		esac
 	)

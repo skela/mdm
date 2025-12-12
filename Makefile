@@ -17,5 +17,9 @@ install: pull
 	@python setup.py --install --restore
 
 .PHONY: help
-help: help
-	@python setup.py --help
+help:
+	@echo "usage: teknolab [install] [update]"
+	@echo
+	@echo "options:"
+	@echo "  install, -i  Install packages"
+	@echo "  update, -u   Update packages"
