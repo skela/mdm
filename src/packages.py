@@ -22,6 +22,7 @@ class DesktopEntry(object):
 	):
 		self.name = name
 		self.comment = comment
+		self.icon = icon
 		self.terminal = terminal
 		self.type = type
 		self.startup_notify = startup_notify
