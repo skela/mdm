@@ -78,8 +78,9 @@ def prepare_flatpak():
 def install_packages():
 	prepare_flatpak()
 
+	install(packages)
+
 	for package in packages:
-		install(package)
 		post_install(package)
 
 
