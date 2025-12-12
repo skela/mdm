@@ -130,6 +130,39 @@ X-Flatpak={package.name}
 		shutil.copy(icon_src, icon_dst)
 
 
+def configure_shell():
+	home = os.path.expanduser("~")
+	bashrc_path = os.path.join(home, ".bashrc")
+	if not os.path.exists(bashrc_path):
+		with open(bashrc_path, "w", encoding="utf-8"):
+			pass
+
+	repo_root = os.path.dirname(os.path.abspath(__file__))
+	snippet = f"""
+# Teknolab command helper
+teknolab() {{
+	(
+		cd "{repo_root}" || return 1
+		if [ "$1" = "update" ]; then
+			make setup
+		else
+			make install
+		fi
+	)
+}}
+"""
+	with open(bashrc_path, "r", encoding="utf-8") as bashrc:
+		content = bashrc.read()
+
+	if "# Teknolab command helper" in content:
+		return
+
+	with open(bashrc_path, "a", encoding="utf-8") as bashrc:
+		if content and not content.endswith("\n"):
+			bashrc.write("\n")
+		bashrc.write(snippet)
+
+
 DESKTOP_DIRS = [
 	"/usr/share/applications",
 	os.path.expanduser("~/.local/share/applications"),
@@ -190,3 +223,4 @@ if args.install:
 if args.restore:
 	configure_gnome_favorites()
 	configure_background()
+	configure_shell()
