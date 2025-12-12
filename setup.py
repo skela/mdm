@@ -3,104 +3,124 @@ import os
 import shutil
 import subprocess
 
+from src.apps import Package, Manager, DesktopEntry
+
+packages: list[Package] = [
+	Package("ghostty"),
+	Package("neovim"),
+	Package("fish"),
+	Package("krita"),
+	Package("inkscape"),
+	Package("gimp"),
+	Package("gemini-cli"),
+	Package("cura-bin"),
+	Package("blender"),
+	Package("visual-studio-code-bin"),
+	Package("google-chrome"),
+	Package(
+		"org.vinegarhq.Sober",
+		manager=Manager.Flatpak,
+		desktop_entry=DesktopEntry(
+			name="Roblox",
+			comment="Launch Roblox via Sober",
+			icon="roblox",
+			startup_notify=True,
+			required=True,
+			categories=["Game"],
+		),
+	),  # roblox
+	Package(
+		"org.vinegarhq.Vinegar",
+		manager=Manager.Flatpak,
+		desktop_entry=DesktopEntry(
+			name="Roblox Studio",
+			comment="Launch Roblox Studio via Vinegar",
+			icon="roblox-studio",
+			startup_notify=True,
+			required=True,
+			categories=["Game", "Education"],
+		),
+	),  # roblox-studio - https://github.com/Nightro-Fx/Flatpak-Vinegar-Guide
+]
+
 
 def execute(cmd: str):
 	os.system(cmd)
 
 
-def install(name: str):
-	execute(f"yay --noconfirm --batchinstall --needed -S {name}")
+def install(package: Package):
+	match package.manager:
+		case Manager.System:
+			execute(f"yay --noconfirm --batchinstall --needed -S {package.name}")
+		case Manager.Flatpak:
+			execute(f"flatpak install flathub {package.name} -y")
 
 
 def update_all():
 	execute("yay --noconfirm")
 
 
+def prepare_flatpak():
+	install(Package("flatpak"))
+	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
+
+
 def install_packages():
-	packages = [
-		"ghostty",
-		"neovim",
-		"fish",
-		"krita",
-		"inkscape",
-		"gimp",
-		"gemini-cli",
-		"cura-bin",
-		"blender",
-		"visual-studio-code-bin",
-		"google-chrome",
-		"flatpak",
-	]
+	prepare_flatpak()
 
 	for package in packages:
 		install(package)
-
-	install_flatpaks()
-	install_roblox_studio_launcher()
-	install_roblox_launcher()
+		post_install(package)
 
 
-def install_flatpaks():
-	flat_paks = [
-		"org.vinegarhq.Sober",
-		"org.vinegarhq.Vinegar",  # roblox-studio - https://github.com/Nightro-Fx/Flatpak-Vinegar-Guide
-	]
+def post_install(package: Package):
+	if not package.desktop_entry.required:
+		return
 
-	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
-	for package in flat_paks:
-		execute(f"flatpak install flathub {package} -y")
-
-
-def install_roblox_studio_launcher():
 	applications_dir = os.path.expanduser("~/.local/share/applications")
 	os.makedirs(applications_dir, exist_ok=True)
 	icons_dir = os.path.expanduser("~/.icons")
 	os.makedirs(icons_dir, exist_ok=True)
-	repo_root = os.path.dirname(os.path.abspath(__file__))
-	icon_src = os.path.join(repo_root, "res", "roblox.svg")
-	icon_name = "roblox-vinegar"
-	icon_dst = os.path.join(icons_dir, f"{icon_name}.svg")
-	shutil.copy(icon_src, icon_dst)
-	desktop_path = os.path.join(applications_dir, f"{icon_name}.desktop")
-	desktop_entry = """[Desktop Entry]
-Name=Roblox Studio
-Comment=Launch Roblox Studio via Vinegar Flatpak
-Exec=flatpak run org.vinegarhq.Vinegar
-Terminal=false
-Type=Application
-Icon=roblox-studio
-Categories=Game;Education;
-StartupNotify=true
-X-Flatpak=org.vinegarhq.Vinegar
-"""
-	with open(desktop_path, "w", encoding="utf-8") as desktop_file:
-		desktop_file.write(desktop_entry)
 
-def install_roblox_launcher():
-	applications_dir = os.path.expanduser("~/.local/share/applications")
-	# os.makedirs(applications_dir, exist_ok=True)
-	# icons_dir = os.path.expanduser("~/.icons")
-	# os.makedirs(icons_dir, exist_ok=True)
-	# repo_root = os.path.dirname(os.path.abspath(__file__))
-	# icon_src = os.path.join(repo_root, "res", "roblox.svg")
-	# icon_name = "roblox-vinegar"
-	# icon_dst = os.path.join(icons_dir, f"{icon_name}.svg")
-	# shutil.copy(icon_src, icon_dst)
-	icon_name = "roblox-sober"
-	desktop_path = os.path.join(applications_dir, f"{icon_name}.desktop")
-	desktop_entry = """[Desktop Entry]
-Name=Roblox Studio
-Comment=Launch Roblox via Sober Flatpak
-Exec=flatpak run org.vinegarhq.Sober
-Terminal=false
-Type=Application
-Icon=roblox-sober
-Categories=Game;Education;
-StartupNotify=true
-X-Flatpak=org.vinegarhq.Sober
-"""
-	with open(desktop_path, "w", encoding="utf-8") as desktop_file:
-		desktop_file.write(desktop_entry)
+	entry = package.desktop_entry
+
+	match package.manager:
+		case Manager.System:
+			desktop_path = os.path.join(applications_dir, f"{package.name}.desktop")
+			desktop_entry = f"""[Desktop Entry]
+Name={entry.name}
+Comment={entry.comment}
+Exec={package.name}
+Terminal={entry.terminal}
+Type={entry.type}
+Icon={entry.icon}
+Categories={";".join(entry.categories)};
+StartupNotify={entry.startup_notify}
+		"""
+			with open(desktop_path, "w", encoding="utf-8") as desktop_file:
+				desktop_file.write(desktop_entry)
+		case Manager.Flatpak:
+			desktop_path = os.path.join(applications_dir, f"{package.name}.desktop")
+			desktop_entry = f"""[Desktop Entry]
+Name={entry.name}
+Comment={entry.comment}
+Exec=flatpak run {package.name}
+Terminal={entry.terminal}
+Type={entry.type}
+Icon={entry.icon}
+Categories={";".join(entry.categories)};
+StartupNotify={entry.startup_notify}
+X-Flatpak={package.name}
+		"""
+			with open(desktop_path, "w", encoding="utf-8") as desktop_file:
+				desktop_file.write(desktop_entry)
+
+	repo_root = os.path.dirname(os.path.abspath(__file__))
+	icon_src = os.path.join(repo_root, "res", f"{entry.icon}.svg")
+	if os.path.exists(icon_src):
+		icon_dst = os.path.join(icons_dir, f"{entry.icon}.svg")
+		shutil.copy(icon_src, icon_dst)
+
 
 DESKTOP_DIRS = [
 	"/usr/share/applications",
@@ -125,8 +145,8 @@ def configure_gnome_favorites():
 	ghostty = find_desktop_entry(["com.mitchellh.ghostty.desktop", "ghostty.desktop"])
 	vscode = find_desktop_entry(["visual-studio-code.desktop", "code.desktop"])
 	blender = find_desktop_entry(["blender.desktop"])
-	roblox_studio = find_desktop_entry(["roblox-vinegar.desktop"])
-	roblox = find_desktop_entry(["roblox-sober.desktop"])
+	roblox_studio = find_desktop_entry(["org.vinegarhq.Vinegar.desktop"])
+	roblox = find_desktop_entry(["org.vinegarhq.Sober.desktop"])
 	nautilus = "org.gnome.Nautilus.desktop"
 	chrome = "google-chrome.desktop"
 	current = [app for app in current if app not in {

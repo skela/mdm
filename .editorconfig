@@ -1,0 +1,27 @@
+[*]
+indent_style = tab
+trim_trailing_whitespace = true
+
+[*.{js,ts,json}]
+indent_size = 2
+
+[*.java]
+indent_size = 2
+
+[*.swift]
+indent_size = 2
+
+[*.kt]
+indent_size = 2
+
+[*.dart]
+indent_style = tab
+trim_trailing_whitespace = true
+indent_size = 2
+curly_bracket_next_line = true
+prefer_double_quotes = true
+
+[*.{yaml,yml}]
+indent_style = space
+indent_size = 2
+
