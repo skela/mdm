@@ -143,24 +143,43 @@ def configure_shell():
 teknolab() {{
 	(
 		cd "{repo_root}" || return 1
-		if [ "$1" = "update" ]; then
-			make setup
-		else
-			make install
-		fi
+		case "$1" in
+			\"\" ) make help ;;
+			install ) make install ;;
+			update ) make update ;;
+			* ) make help ;;
+		esac
 	)
 }}
 """
+	start_marker = "# Teknolab command helper"
 	with open(bashrc_path, "r", encoding="utf-8") as bashrc:
 		content = bashrc.read()
 
-	if "# Teknolab command helper" in content:
+	if snippet.strip() in content:
 		return
 
-	with open(bashrc_path, "a", encoding="utf-8") as bashrc:
-		if content and not content.endswith("\n"):
+	cleaned = content
+	if start_marker in content:
+		lines = content.splitlines()
+		trimmed = []
+		skipping = False
+		for line in lines:
+			if not skipping and line.strip() == start_marker:
+				skipping = True
+				continue
+			if skipping:
+				if line.strip() == "}":
+					skipping = False
+				continue
+			trimmed.append(line)
+		cleaned = "\n".join(trimmed).rstrip("\n")
+
+	with open(bashrc_path, "w", encoding="utf-8") as bashrc:
+		if cleaned:
+			bashrc.write(cleaned)
 			bashrc.write("\n")
-		bashrc.write(snippet)
+		bashrc.write(snippet.lstrip("\n"))
 
 
 DESKTOP_DIRS = [
