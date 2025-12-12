@@ -2,8 +2,15 @@ import ast
 import os
 import shutil
 import subprocess
+import argparse
 
 from src.packages import Package, Manager, DesktopEntry
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--install", "-i", help="Install packages", action="store_true", default=False)
+parser.add_argument("--update", "-u", help="Update packages", action="store_true", default=False)
+parser.add_argument("--restore", "-r", help="Restores Teknolab settings", action="store_true", default=False)
+args = parser.parse_args()
 
 packages: list[Package] = [
 	Package("ghostty"),
@@ -176,7 +183,10 @@ def configure_background():
 	execute(f"gsettings set org.gnome.desktop.background picture-uri-dark {bg} ")
 
 
-update_all()
-install_packages()
-configure_gnome_favorites()
-configure_background()
+if args.update:
+	update_all()
+if args.install:
+	install_packages()
+if args.restore:
+	configure_gnome_favorites()
+	configure_background()

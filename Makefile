@@ -1,10 +1,14 @@
-default: update setup
+default: pull setup
 
-.PHONY: update
-update:
+.PHONY: pull
+pull:
 	@git pull
 
 .PHONY: setup
 setup:
-	@python setup.py
+	@python setup.py --update --install --restore
+
+.PHONY: install
+install: pull
+	@python setup.py --install --restore
 

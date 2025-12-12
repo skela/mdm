@@ -32,4 +32,4 @@ Follow these steps to install the OS on a fresh machine.
 - Open a terminal
 - `git clone https://github.com/skela/mdm .mdm`
 - `cd .mdm`
-- `python setup.py`
+- `make`
