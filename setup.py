@@ -17,6 +17,7 @@ packages: list[Package] = [
 	Package("blender"),
 	Package("visual-studio-code-bin"),
 	Package("google-chrome"),
+	Package("microblocks"),
 	Package(
 		"org.vinegarhq.Sober",
 		manager=Manager.Flatpak,
