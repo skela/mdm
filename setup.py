@@ -147,6 +147,7 @@ teknolab() {{
 			"" ) make help ;;
 			install|-i ) make install ;;
 			update|-u ) make update ;;
+			restore|-r ) make restore;;
 			* ) make help ;;
 		esac
 	)
