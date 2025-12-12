@@ -56,12 +56,14 @@ def execute(cmd: str):
 	os.system(cmd)
 
 
-def install(package: Package):
-	match package.manager:
-		case Manager.System:
-			execute(f"yay --noconfirm --batchinstall --needed -S {package.name}")
-		case Manager.Flatpak:
-			execute(f"flatpak install flathub {package.name} -y")
+def install(packages: list[Package]):
+	syspacks = [p.name for p in packages if p.manager == Manager.System]
+	if len(syspacks) > 0:
+		execute(f'yay --noconfirm --batchinstall --needed -S {" ".join(syspacks)}')
+
+	flatpaks = [p.name for p in packages if p.manager == Manager.Flatpak]
+	for package in flatpaks:
+		execute(f"flatpak install flathub {package} -y")
 
 
 def update_all():
@@ -69,7 +71,7 @@ def update_all():
 
 
 def prepare_flatpak():
-	install(Package("flatpak"))
+	install([Package("flatpak")])
 	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
 
 
