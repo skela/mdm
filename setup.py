@@ -3,7 +3,7 @@ import os
 import shutil
 import subprocess
 
-from src.apps import Package, Manager, DesktopEntry
+from src.packages import Package, Manager, DesktopEntry
 
 packages: list[Package] = [
 	Package("ghostty"),
