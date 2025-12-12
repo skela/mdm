@@ -25,6 +25,7 @@ packages: list[Package] = [
 	Package("visual-studio-code-bin"),
 	Package("google-chrome"),
 	Package("microblocks"),
+	Package("flatpak"),
 	Package(
 		"org.vinegarhq.Sober",
 		manager=Manager.Flatpak,
@@ -61,6 +62,8 @@ def install(packages: list[Package]):
 	if len(syspacks) > 0:
 		execute(f'yay --noconfirm --batchinstall --needed -S {" ".join(syspacks)}')
 
+	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
+
 	flatpaks = [p.name for p in packages if p.manager == Manager.Flatpak]
 	for package in flatpaks:
 		execute(f"flatpak install flathub {package} -y")
@@ -70,13 +73,7 @@ def update_all():
 	execute("yay --noconfirm")
 
 
-def prepare_flatpak():
-	install([Package("flatpak")])
-	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
-
-
 def install_packages():
-	prepare_flatpak()
 
 	install(packages)
 
