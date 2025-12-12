@@ -65,8 +65,8 @@ def install(packages: list[Package]):
 	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
 
 	flatpaks = [p.name for p in packages if p.manager == Manager.Flatpak]
-	for package in flatpaks:
-		execute(f"flatpak install flathub {package} -y")
+	if len(flatpaks) > 0:
+		execute(f'flatpak install flathub {" ".join(flatpaks)} -y')
 
 
 def update_all():
