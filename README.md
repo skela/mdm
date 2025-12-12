@@ -33,3 +33,7 @@ Follow these steps to install the OS on a fresh machine.
 - `git clone https://github.com/skela/mdm .mdm`
 - `cd .mdm`
 - `make`
+
+## Quick start
+
+If you've previously run `make`, and just want the latest packages, run `make install` , this just installs the latest packages without doing a full update of everything. However if this fails, you might need to run `make` first.
