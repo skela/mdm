@@ -36,4 +36,4 @@ Follow these steps to install the OS on a fresh machine.
 
 ## Quick start
 
-If you've previously run `make`, and just want the latest packages, run `make install` , this just installs the latest packages without doing a full update of everything. However if this fails, you might need to run `make` first.
+If you've previously run `make`, you should be able to run the `teknolab` command whenever you open a terminal. However if it fails, just run `source ~/.bashrc` and your shell should update. With `teknolab` you can either do a full update `teknolab update` or install needed packages with `teknolab install`.

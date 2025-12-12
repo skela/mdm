@@ -150,6 +150,9 @@ teknolab() {{
 			* ) make help ;;
 		esac
 	)
+	case "$1" in
+		install|-i|update|-u ) source ~/.bashrc ;;
+	esac
 }}
 """
 	start_marker = "# Teknolab command helper"
