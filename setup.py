@@ -25,6 +25,7 @@ packages: list[Package] = [
 	Package("visual-studio-code-bin"),
 	Package("google-chrome"),
 	Package("microblocks"),
+	Package("localsend-bin"),
 	Package("flatpak"),
 	Package(
 		"org.vinegarhq.Sober",
