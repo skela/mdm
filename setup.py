@@ -72,6 +72,7 @@ def install(packages: list[Package]):
 
 def update_all():
 	execute("yay --noconfirm")
+	execute("flatpak update -y")
 
 
 def install_packages():
