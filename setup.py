@@ -9,6 +9,7 @@ from src.packages import Package, Manager, DesktopEntry
 parser = argparse.ArgumentParser()
 parser.add_argument("--install", "-i", help="Install packages", action="store_true", default=False)
 parser.add_argument("--update", "-u", help="Update packages", action="store_true", default=False)
+parser.add_argument("--upgrade", "-U", help="Upgrade everything", action="store_true", default=False)
 parser.add_argument("--restore", "-r", help="Restores Teknolab settings", action="store_true", default=False)
 args = parser.parse_args()
 
@@ -70,7 +71,11 @@ def install(packages: list[Package]):
 		execute(f'flatpak install flathub {" ".join(flatpaks)} -y')
 
 
-def update_all():
+def update():
+	execute("flatpak update -y")
+
+
+def upgrade():
 	execute("yay --noconfirm")
 	execute("flatpak update -y")
 
@@ -147,14 +152,15 @@ teknolab() {{
 		cd "{repo_root}" || return 1
 		case "$1" in
 			"" ) make help ;;
+			restore|-r ) make restore;;
 			install|-i ) make install ;;
 			update|-u ) make update ;;
-			restore|-r ) make restore;;
+			upgrade|-U ) make upgrade ;;
 			* ) make help ;;
 		esac
 	)
 	case "$1" in
-		install|-i|update|-u ) source ~/.bashrc ;;
+		install|-i|update|-u|upgrade|-U) source ~/.bashrc ;;
 	esac
 }}
 """
@@ -242,7 +248,9 @@ def configure_background():
 
 
 if args.update:
-	update_all()
+	update()
+if args.upgrade:
+	upgrade()
 if args.install:
 	install_packages()
 if args.restore:
