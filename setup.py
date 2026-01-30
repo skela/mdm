@@ -5,6 +5,7 @@ import subprocess
 import argparse
 
 from src.packages import Package, Manager, DesktopEntry
+from src.logger import Logger
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--install", "-i", help="Install packages", action="store_true", default=False)
@@ -53,6 +54,8 @@ packages: list[Package] = [
 		),
 	),  # roblox-studio - https://github.com/Nightro-Fx/Flatpak-Vinegar-Guide
 ]
+
+logger = Logger()
 
 
 def execute(cmd: str):
@@ -138,6 +141,7 @@ X-Flatpak={package.name}
 
 
 def configure_shell():
+	logger.start("Configuring shell")
 	home = os.path.expanduser("~")
 	bashrc_path = os.path.join(home, ".bashrc")
 	if not os.path.exists(bashrc_path):
@@ -193,6 +197,8 @@ teknolab() {{
 			bashrc.write("\n")
 		bashrc.write(snippet.lstrip("\n"))
 
+	logger.finish_ok("Configured shell")
+
 
 DESKTOP_DIRS = [
 	"/usr/share/applications",
@@ -242,9 +248,26 @@ def configure_gnome_favorites():
 
 
 def configure_background():
+	logger.start("Configuring background")
 	bg = "~/.mdm/res/bg.jpg"
 	execute(f"gsettings set org.gnome.desktop.background picture-uri {bg} ")
 	execute(f"gsettings set org.gnome.desktop.background picture-uri-dark {bg} ")
+	logger.finish_ok("Configured background")
+
+
+def configure_permissions():
+	microbit_udev_rules_path = "/etc/udev/rules.d/69-microbit.rules"
+	if not os.path.exists(microbit_udev_rules_path):
+		logger.start("Configuring permissions")
+		rules = 'SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", TAG+="uaccess"'
+		with open(microbit_udev_rules_path, "w") as f:
+			f.write(rules)
+		execute("sudo udevadm control --reload")
+		execute("sudo udevadm trigger")
+		logger.finish_ok("Configured permissions")
+
+	# uucp - unix-to-unix-copy - aka serial communications group
+	# execute("sudo usermod -aG uucp $USER")
 
 
 if args.update:
@@ -257,3 +280,4 @@ if args.restore:
 	configure_gnome_favorites()
 	configure_background()
 	configure_shell()
+	configure_permissions()
