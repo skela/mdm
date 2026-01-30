@@ -37,3 +37,13 @@ Follow these steps to install the OS on a fresh machine.
 ## Quick start
 
 If you've previously run `make`, you should be able to run the `teknolab` command whenever you open a terminal. However if it fails, just run `source ~/.bashrc` and your shell should update. With `teknolab` you can either do a full update `teknolab update` or install needed packages with `teknolab install`.
+
+## TeknoLab commands
+
+These commands can be entered into ghostty or any other terminal emulator once the machine has been successfully setup.
+
+`teknolab` - Help information about available commands.
+`teknolab -i` or `teknolab --install` - Installs all needed packages.
+`teknolab -r` or `teknolab --restore` - Sets up various configurations that are needed for TeknoLab lessons.
+`teknolab -u` or `teknolab --update` - Does a quick update, which updates only what's necessary.
+`teknolab -U` or `teknolab --upgrade` - Does a full upgrade of all installed packages, this may be needed should a package fail to install.
