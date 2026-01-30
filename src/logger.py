@@ -8,3 +8,6 @@ class Logger(object):
 
 	def finish_ok(self, msg: str):
 		print(f"\r{msg}: \u2705")
+
+	def finish_error(self, msg: str):
+		print(f"\r{msg}: \u274C")

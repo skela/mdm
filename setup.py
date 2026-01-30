@@ -65,13 +65,13 @@ def execute(cmd: str):
 def install(packages: list[Package]):
 	syspacks = [p.name for p in packages if p.manager == Manager.System]
 	if len(syspacks) > 0:
-		execute(f'yay --noconfirm --batchinstall --needed -S {" ".join(syspacks)}')
+		execute(f"yay --noconfirm --batchinstall --needed -S {' '.join(syspacks)}")
 
 	execute("flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo")
 
 	flatpaks = [p.name for p in packages if p.manager == Manager.Flatpak]
 	if len(flatpaks) > 0:
-		execute(f'flatpak install flathub {" ".join(flatpaks)} -y')
+		execute(f"flatpak install flathub {' '.join(flatpaks)} -y")
 
 
 def update():
@@ -84,7 +84,6 @@ def upgrade():
 
 
 def install_packages():
-
 	install(packages)
 
 	for package in packages:
@@ -215,6 +214,11 @@ def find_desktop_entry(candidates: list[str]) -> str:
 
 
 def configure_gnome_favorites():
+	logger.start("Configuring gnome favourites")
+	if not shutil.which("gsettings"):
+		logger.finish_error("Configured gnome favourites")
+		return
+
 	raw = subprocess.check_output(
 		["gsettings", "get", "org.gnome.shell", "favorite-apps"],
 		text=True,
@@ -244,7 +248,8 @@ def configure_gnome_favorites():
 	excluded = set(ordered)
 	current = [app for app in current if app not in excluded]
 	favorites = ordered + current
-	execute(f"gsettings set org.gnome.shell favorite-apps \"{favorites}\"")
+	execute(f'gsettings set org.gnome.shell favorite-apps "{favorites}"')
+	logger.finish_ok("Configured gnome favourites")
 
 
 def configure_background():
