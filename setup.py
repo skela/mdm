@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 import argparse
+import filecmp
 
 from src.packages import Package, Manager, DesktopEntry
 from src.logger import Logger
@@ -262,11 +263,10 @@ def configure_background():
 
 def configure_permissions():
 	microbit_udev_rules_path = "/etc/udev/rules.d/69-microbit.rules"
-	if not os.path.exists(microbit_udev_rules_path):
+	desired = "./cfg/udev/69-microbit.rules"
+	if not os.path.exists(microbit_udev_rules_path) or not filecmp.cmp(microbit_udev_rules_path, desired, shallow=False):
 		logger.start("Configuring permissions")
-		rules = 'SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", TAG+="uaccess"'
-		with open(microbit_udev_rules_path, "w") as f:
-			f.write(rules)
+		execute(f"sudo cp {desired} {microbit_udev_rules_path}")
 		execute("sudo udevadm control --reload")
 		execute("sudo udevadm trigger")
 		logger.finish_ok("Configured permissions")
