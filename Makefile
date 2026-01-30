@@ -17,7 +17,7 @@ install: pull
 	@python setup.py --install --restore
 
 .PHONY: restore
-restore:
+restore: pull
 	@python setup.py --restore
 
 .PHONY: help
