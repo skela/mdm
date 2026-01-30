@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  mdm:
+    image: alex5402/endeavouros:latest
+    container_name: mdm
+    volumes:
+      - ./res:/home/user/.mdm/res:ro
+      - ./src:/home/user/.mdm/src:ro
+      - ./Makefile:/home/user/.mdm/Makefile:ro
+      - ./README.md:/home/user/.mdm/README.md:ro
+      - ./setup.py:/home/user/.mdm/setup.py:ro
+    working_dir: /home/user/.mdm
+    stdin_open: true
+    tty: true
+    command: /bin/bash
