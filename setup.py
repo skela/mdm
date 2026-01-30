@@ -261,6 +261,11 @@ def configure_background():
 	logger.finish_ok("Configured background")
 
 
+def configure_groups():
+	pass
+	# execute("sudo usermod -aG uucp $USER") # uucp - unix-to-unix-copy - aka serial communications group
+
+
 def configure_permissions():
 	microbit_udev_rules_path = "/etc/udev/rules.d/69-microbit.rules"
 	desired = "./cfg/udev/69-microbit.rules"
@@ -270,9 +275,6 @@ def configure_permissions():
 		execute("sudo udevadm control --reload")
 		execute("sudo udevadm trigger")
 		logger.finish_ok("Configured permissions")
-
-	# uucp - unix-to-unix-copy - aka serial communications group
-	# execute("sudo usermod -aG uucp $USER")
 
 
 if args.update:
@@ -285,4 +287,5 @@ if args.restore:
 	configure_gnome_favorites()
 	configure_background()
 	configure_shell()
+	configure_groups()
 	configure_permissions()
