@@ -33,6 +33,8 @@ packages: list[Package] = [
 	Package("microblocks"),
 	Package("localsend-bin"),
 	Package("flatpak"),
+	Package("tailscale"),
+	Package("qrencode"),
 	Package(
 		"org.vinegarhq.Sober",
 		manager=Manager.Flatpak,
@@ -293,8 +295,6 @@ def get_wifi_mac() -> str:
 
 
 def enroll_tailscale():
-	if not shutil.which("tailscale") or not shutil.which("qrencode"):
-		execute("yay --noconfirm --needed -S tailscale qrencode")
 	execute("sudo systemctl enable --now tailscaled")
 
 	result = subprocess.run(["tailscale", "status"], capture_output=True, text=True)
