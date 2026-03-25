@@ -21,7 +21,7 @@ restore: pull
 	@python setup.py --restore
 
 .PHONY: enroll
-enroll: pull
+enroll:
 	@python setup.py --enroll
 
 .PHONY: help
