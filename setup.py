@@ -166,6 +166,7 @@ teknolab() {{
 			update|-u ) make update ;;
 			upgrade|-U ) make upgrade ;;
 			enroll|-e ) make enroll ;;
+			pull|-p ) make pull ;;
 			* ) make help ;;
 		esac
 	)

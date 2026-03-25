@@ -26,7 +26,7 @@ enroll: pull
 
 .PHONY: help
 help:
-	@echo "usage: teknolab [install] [update] [upgrade] [restore] [enroll]"
+	@echo "usage: teknolab [install] [update] [upgrade] [restore] [enroll] [pull]"
 	@echo
 	@echo "options:"
 	@echo "  restore, -r   Restore environment"
@@ -34,3 +34,4 @@ help:
 	@echo "  update, -u    Update packages"
 	@echo "  upgrade, -U   Upgrade everything"
 	@echo "  enroll, -e    Enroll device in TeknoLab"
+	@echo "  pull, -p      Pull latest changes"
