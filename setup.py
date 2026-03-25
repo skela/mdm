@@ -1,6 +1,8 @@
 import ast
+import configparser
 import os
 import shutil
+import socket
 import subprocess
 import argparse
 import filecmp
@@ -13,6 +15,7 @@ parser.add_argument("--install", "-i", help="Install packages", action="store_tr
 parser.add_argument("--update", "-u", help="Update packages", action="store_true", default=False)
 parser.add_argument("--upgrade", "-U", help="Upgrade everything", action="store_true", default=False)
 parser.add_argument("--restore", "-r", help="Restores Teknolab settings", action="store_true", default=False)
+parser.add_argument("--enroll", "-e", help="Enroll device in TeknoLab", action="store_true", default=False)
 args = parser.parse_args()
 
 packages: list[Package] = [
@@ -60,7 +63,7 @@ logger = Logger()
 
 
 def execute(cmd: str):
-	os.system(cmd)
+	subprocess.run(cmd, shell=True)
 
 
 def install(packages: list[Package]):
@@ -160,6 +163,7 @@ teknolab() {{
 			install|-i ) make install ;;
 			update|-u ) make update ;;
 			upgrade|-U ) make upgrade ;;
+			enroll|-e ) make enroll ;;
 			* ) make help ;;
 		esac
 	)
@@ -277,6 +281,73 @@ def configure_permissions():
 		logger.finish_ok("Configured permissions")
 
 
+def get_wifi_mac() -> str:
+	try:
+		for iface in os.listdir("/sys/class/net"):
+			if iface.startswith("wl"):
+				with open(f"/sys/class/net/{iface}/address") as f:
+					return f.read().strip()
+	except Exception:
+		pass
+	return "unknown"
+
+
+def enroll_tailscale():
+	if not shutil.which("tailscale") or not shutil.which("qrencode"):
+		execute("yay --noconfirm --needed -S tailscale qrencode")
+	execute("sudo systemctl enable --now tailscaled")
+
+	result = subprocess.run(["tailscale", "status"], capture_output=True, text=True)
+	if result.returncode == 0:
+		print("This device is already enrolled in Tailscale.")
+		return
+
+	hostname = socket.gethostname()
+	mac = get_wifi_mac()
+
+	repo_root = os.path.dirname(os.path.abspath(__file__))
+	conf_path = os.path.join(repo_root, "mdm.conf")
+	authkey = None
+	if os.path.exists(conf_path):
+		conf = configparser.ConfigParser()
+		conf.read(conf_path)
+		authkey = conf.get("tailscale", "authkey", fallback=None)
+
+	if authkey:
+		logger.start(f"Enrolling {hostname} ({mac}) using saved auth key")
+		execute(f"sudo tailscale up --authkey={authkey} --hostname={hostname}")
+		logger.finish_ok("Enrolled in Tailscale")
+		return
+
+	process = subprocess.Popen(
+		["sudo", "tailscale", "up", f"--hostname={hostname}"],
+		stdout=subprocess.PIPE,
+		stderr=subprocess.STDOUT,
+		text=True,
+	)
+
+	url = None
+	assert process.stdout is not None
+	for line in process.stdout:
+		stripped = line.strip()
+		if "login.tailscale.com" in stripped:
+			url = stripped
+			break
+
+	if url:
+		print(f"\nDevice:   {hostname}")
+		print(f"WiFi MAC: {mac}")
+		print("\nScan to enroll:\n")
+		subprocess.run(["qrencode", "-t", "UTF8", f"{url}?mac={mac.replace(':', '%3A')}"])
+		print(f"\nOr visit: {url}\n")
+		print("Waiting for authentication...")
+		process.wait()
+		logger.finish_ok("Enrolled in Tailscale")
+	else:
+		process.wait()
+		logger.finish_error("Tailscale enrollment")
+
+
 if args.update:
 	update()
 if args.upgrade:
@@ -289,3 +360,5 @@ if args.restore:
 	configure_shell()
 	configure_groups()
 	configure_permissions()
+if args.enroll:
+	enroll_tailscale()

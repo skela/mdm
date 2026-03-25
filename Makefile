@@ -20,12 +20,17 @@ install: pull
 restore: pull
 	@python setup.py --restore
 
+.PHONY: enroll
+enroll: pull
+	@python setup.py --enroll
+
 .PHONY: help
 help:
-	@echo "usage: teknolab [install] [update] [upgrade] [restore]"
+	@echo "usage: teknolab [install] [update] [upgrade] [restore] [enroll]"
 	@echo
 	@echo "options:"
 	@echo "  restore, -r   Restore environment"
-	@echo "  install, -i  Install packages"
-	@echo "  update, -u   Update packages"
+	@echo "  install, -i   Install packages"
+	@echo "  update, -u    Update packages"
 	@echo "  upgrade, -U   Upgrade everything"
+	@echo "  enroll, -e    Enroll device in TeknoLab"
