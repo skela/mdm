@@ -85,7 +85,7 @@ def update():
 
 
 def upgrade():
-	execute("yay --noconfirm")
+	execute("yay --noconfirm --batchinstall -Syu")
 	execute("flatpak update -y")
 
 
