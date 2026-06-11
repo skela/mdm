@@ -297,6 +297,7 @@ def get_wifi_mac() -> str:
 
 def enroll_tailscale():
 	execute("sudo systemctl enable --now tailscaled")
+	execute(f"sudo tailscale set --operator={os.environ.get('USER')}")
 
 	result = subprocess.run(["tailscale", "status"], capture_output=True, text=True)
 	if result.returncode == 0:
@@ -316,12 +317,12 @@ def enroll_tailscale():
 
 	if authkey:
 		logger.start(f"Enrolling {hostname} ({mac}) using saved auth key")
-		execute(f"sudo tailscale up --authkey={authkey} --hostname={hostname}")
+		execute(f"tailscale up --authkey={authkey} --hostname={hostname}")
 		logger.finish_ok("Enrolled in Tailscale")
 		return
 
 	process = subprocess.Popen(
-		["sudo", "tailscale", "up", f"--hostname={hostname}"],
+		["tailscale", "up", f"--hostname={hostname}"],
 		stdout=subprocess.PIPE,
 		stderr=subprocess.STDOUT,
 		text=True,
