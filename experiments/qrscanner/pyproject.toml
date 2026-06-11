@@ -1,0 +1,13 @@
+[project]
+name = "qr-scanner"
+version = "0.1.0"
+description = "A simple QR code scanner using OpenCV and a webcam"
+dependencies = [
+    "opencv-contrib-python",
+    "zxing-cpp",
+]
+requires-python = ">=3.10"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
